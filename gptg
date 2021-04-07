@@ -1,0 +1,31 @@
+ <?php 
+        $menu_0 = \App\Menu::where('id_induk',0)->get();
+        foreach ($menu_0 as $key){
+          get_menu_child($key->id);
+        }
+        function get_menu_child($parent=0){
+          $menu = \App\Menu::where('id_induk',$parent)->get();
+          $parent = \App\Menu::where('id',$parent)->first();
+          ?>
+          <li class="nav-item has-treeview">
+            <a href="{{url($parent->url)}}" class="nav-link">
+              <i class="nav-icon fas {{$parent->icon}}"></i>
+              <p>{{$parent->nama}}
+              @if(sizeof($menu)>0)
+              <i class="fas fa-angle-left right"></i>
+              @endif
+              </p>
+            </a>
+            @if(sizeof($menu)>0)
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+              <?php
+              foreach ($menu as $key){
+                get_menu_child($key->id);
+              }
+              ?>
+              </li>
+            </ul>
+            @endif
+          </li>
+        <?php } ?>
